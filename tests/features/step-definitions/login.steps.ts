@@ -2,6 +2,7 @@ import { Before, After, Given, When, Then } from '@cucumber/cucumber';
 import { Browser, chromium, expect, Page } from '@playwright/test';
 import { LoginPage } from '../../../pages/login.page';
 import { HomePage } from '../../../pages/homePage.page';
+import fs from 'fs';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -18,9 +19,13 @@ Before(async () => {
     page = await context.newPage();
     });
 
-After(async () => {
-    await browser?.close();
-    });
+After(async function (scenario) {
+  if (scenario.result?.status === 'FAILED') {
+    const buffer = await page.screenshot();
+    fs.mkdirSync('test-results/screenshots', { recursive: true });
+    fs.writeFileSync(`test-results/screenshots/${Date.now()}.png`, buffer);
+  }
+});
 
 Given('I open the login page', async () => {
     loginPage = new LoginPage(page);
