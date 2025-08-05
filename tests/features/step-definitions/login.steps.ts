@@ -42,5 +42,5 @@ When('I log out', async () => {
 });
 
 Then('I should be redirected to the login page', async () => {
-    await expect(page).toHaveURL(`${process.env.BASE_URL}/login`);
+    await expect(page).toHaveURL(`${process.env.BASE_URL}/logout`);
 });
