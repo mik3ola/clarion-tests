@@ -1,0 +1,40 @@
+name: Playwright Tests
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Create .env from GitHub secrets
+        run: |
+          echo "BASE_URL=${{ secrets.BASE_URL }}" >> .env
+          echo "USERNAME=${{ secrets.USERNAME }}" >> .env
+          echo "PASSWORD=${{ secrets.PASSWORD }}" >> .env
+
+      - name: Install Playwright browsers
+        run: npx playwright install
+
+      - name: Run UI tests
+        if: ${{ exists('tests/ui') }}
+        run: npm run test:ui
+
+      - name: Run API tests
+        if: ${{ exists('tests/api') }}
+        run: npm run test:api
+
+      - name: Run BDD tests
+        if: ${{ exists('tests/features') }}
+        run: npm run test:bdd
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-results
+          path: test-results
