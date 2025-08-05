@@ -38,10 +38,10 @@ jobs:
 
       - name: Run BDD tests
         run: |
-          if [ -d tests/bdd ]; then
+          if [ -d tests/features ]; then
             npm run test:bdd
           else
-            echo "Skipping BDD tests: tests/bdd not found"
+            echo "Skipping BDD tests: tests/features not found"
           fi
 
       - name: Upload test results
