@@ -21,16 +21,28 @@ jobs:
         run: npx playwright install
 
       - name: Run UI tests
-        if: ${{ exists('tests/ui') }}
-        run: npm run test:ui
+        run: |
+          if [ -d tests/ui ]; then
+            npm run test:ui
+          else
+            echo "Skipping UI tests: tests/ui not found"
+          fi
 
       - name: Run API tests
-        if: ${{ exists('tests/api') }}
-        run: npm run test:api
+        run: |
+          if [ -d tests/api ]; then
+            npm run test:api
+          else
+            echo "Skipping API tests: tests/api not found"
+          fi
 
       - name: Run BDD tests
-        if: ${{ exists('tests/features') }}
-        run: npm run test:bdd
+        run: |
+          if [ -d tests/bdd ]; then
+            npm run test:bdd
+          else
+            echo "Skipping BDD tests: tests/bdd not found"
+          fi
 
       - name: Upload test results
         if: always()
