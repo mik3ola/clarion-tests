@@ -25,6 +25,10 @@ After(async function (scenario) {
     fs.mkdirSync('test-results/screenshots', { recursive: true });
     fs.writeFileSync(`test-results/screenshots/${Date.now()}.png`, buffer);
   }
+
+  if (browser) {
+    await browser.close();
+  }
 });
 
 Given('I open the login page', async () => {
